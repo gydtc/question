@@ -1,0 +1,45 @@
+---
+# This playbook for get sysinfo
+- name: gggg
+  gather_facts: yes
+  hosts: all
+  remote_user: root
+  tasks:
+    #- name: looping test
+    #  debug:
+    #    msg: "{{ item.key }} {{ item.value.size }} "
+    #  when: not  item.value.partitions and item.key !="dm-1"
+    #  when:  item.key.find('sd') == 0
+    #  with_dict: "{{ ansible_devices }}"
+    #    msg: "{{ ansible_devices.keys() | select('match','sd[a-z]') | list }}"
+
+    - name: get sysinfo
+      template: 
+        src: /opt/ansible/a.j2
+        dest: "/opt/ansible/{{ ansible_default_ipv4.address }}.txt"
+        mode: 0777
+      connection: local
+
+      
+########write in a j2 file ########
+# SYS Info
+# hostname: {{ ansible_hostname }}
+# ipv4:	  {{ ansible_default_ipv4.address }}
+# release:  {{ ansible_distribution }} - {{ ansible_distribution_version }} - {{ ansible_distribution_release }}
+# kernel:   {{ ansible_kernel }}
+# machine:  {{ ansible_machine }}
+# 
+# CPU Info
+# cpuname: {{ ansible_processor[2] }}
+# cpunum:  {{ ansible_processor_vcpus }}
+# corenum: {{ ansible_processor_cores }}
+# 
+# Mem Info
+# mem:      {{ ansible_memtotal_mb }} MB
+# 
+# Disk Info
+# {% for i in ansible_devices %}
+# {% if i.find('sd') == 0 %}
+# Name: {{ i }} , Size:  {{ansible_devices[i].size}} 
+# {% endif %}
+# {% endfor%}
