@@ -1,0 +1,13 @@
+上班发现es7系统奔溃了，无法使用，启动了好多次都无法启动成功！！！
+主要的报警关键字包含如下：
+master not discovered or elected yet, an election requires at least 2 nodes with ids from
+
+查看系统日志发现：
+systemctl status elasticsearch
+elasticsearch.service start operation timed out. Terminating.
+
+然后检查
+systemctl show elasticsearch | grep -i timeout
+发现默认是1分30秒，进程直接中断，而后修改es启动脚本，添加 TimeoutStartSec=900 ，而后启动成功。
+
+感觉是因为系统自定义脚本的timeout时间作怪，导致启动es失败。。。
